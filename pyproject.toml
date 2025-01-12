@@ -1,0 +1,33 @@
+[project]
+name = "diving-station-py"
+version = "0.1.0"
+description = "A Python library for diving station"
+authors = [
+    { name = "OctSquid", email = "pqvs6k96@s.okayama-u.ac.jp" }
+]
+dependencies = [
+    "python-osc>=1.9.3",
+    "asyncio>=3.4.3",
+]
+readme = "README.md"
+requires-python = ">= 3.9"
+license = { text = "MIT" }
+
+[build-system]
+requires = ["hatchling==1.26.3", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "ruff>=0.9.1",
+    "pyright>=1.1.391",
+    "pytest>=8.3.4",
+    "pytest-asyncio>=0.25.2",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/diving_station_py"]
