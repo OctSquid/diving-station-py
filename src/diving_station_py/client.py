@@ -1,10 +1,7 @@
 import asyncio
-from enum import Enum
-from dataclasses import dataclass
 from typing import Optional
 from pythonosc import udp_client, osc_server
 from pythonosc.dispatcher import Dispatcher
-from pythonosc.osc_message_builder import OscMessageBuilder
 from logging import getLogger
 
 from diving_station_py.protocol import (
