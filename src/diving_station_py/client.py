@@ -44,7 +44,7 @@ logger = getLogger(__name__)
 
 class DivingStationClient:
   """Diving Station Protocol を使用してデータを送受信するためのクラス
-  プロトコルの詳細: diving_station_protocol.md
+  プロトコルの詳細: https://docs.diver-x.jp/dsprotocol/about.html
   """
 
   def __init__(self, ip: str = "127.0.0.1", receive_port: int = 25788) -> None:
