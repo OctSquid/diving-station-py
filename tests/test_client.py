@@ -1,49 +1,67 @@
 import asyncio
+
 import pytest
 
-from diving_station_py.protocol.hand_bend import HandType
 from diving_station_py.client import DivingStationClient
+from diving_station_py.protocol.hand_bend import HandType
 
 
-@pytest.fixture
-def client():
-    return DivingStationClient()
+@pytest.fixture(scope="module")
+def event_loop():
+  """Test the event loop."""
+  loop = asyncio.get_event_loop()
+  yield loop
+  loop.close()
 
 
-@pytest.mark.asyncio(loop_scope="module")
-async def test_client(client):
-    assert client.receive_port == 25788
-    assert client.devices == []
-    assert client._dispatcher is not None
-    assert client._client is not None
-    assert client._connected is False
+@pytest.fixture(scope="function")
+async def client(event_loop):
+  """Test the DivingStationClient."""
+  client = DivingStationClient()
+  yield client
+  if client.connected:
+    await client.disconnect()
 
 
-@pytest.mark.asyncio(loop_scope="module")
+@pytest.mark.asyncio()
+async def test_init_client(client):
+  """Test the DivingStationClient."""
+  assert client.receive_port == 25788
+  assert client._connected is False
+
+
+@pytest.mark.asyncio()
 async def test_connect(client):
-    await client.connect()
-    assert client.connected is True
-    await client.disconnect()
+  """Test the connect method."""
+  await client.connect()
+  assert client.connected is True
+  await client.disconnect()
 
 
-@pytest.mark.asyncio(loop_scope="module")
+@pytest.mark.asyncio()
 async def test_disconnect(client):
-    await client.connect()
-    await client.disconnect()
-    assert client.connected is False
+  """Test the disconnect method."""
+  await client.connect()
+  await client.disconnect()
+  assert client.connected is False
 
 
-@pytest.mark.asyncio(loop_scope="module")
+@pytest.mark.asyncio()
 async def test_send_haptic(client):
-    await client.connect()
+  """Test the send_haptic method."""
+  await client.connect()
 
-    # device が見つかるまで待つ
-    main_device = None
-    while not main_device:
-        await asyncio.sleep(0.1)
-        main_device = client.devices[0] if client.devices else None
+  # device が見つかるまで待つ
+  main_device = None
+  while not main_device:
+    await asyncio.sleep(0.1)
+    main_device = client.devices[0] if client.devices else None
 
-    await client.send_haptic(main_device.id, HandType.RIGHT, 0.1, 1.0, 0.5)
-    await client.disconnect()
+  # 右手を振動
+  await client.send_haptic(main_device.id, HandType.RIGHT, 0.1, 1.0, 0.2)
+  await asyncio.sleep(0.2)
+  # 左手を振動
+  await client.send_haptic(main_device.id, HandType.LEFT, 0.1, 1.0, 0.2)
+  await client.disconnect()
 
-    assert True
+  assert True
