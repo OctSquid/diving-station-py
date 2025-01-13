@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
-from .constants import __protocol_version__
-from .hand_bend import HandType
+from .constants import HandType, __protocol_version__
 
 
 @dataclass

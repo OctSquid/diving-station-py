@@ -4,22 +4,11 @@ from logging import getLogger
 from typing import (
   Any,
   Optional,
+  cast,
 )
 
 from pythonosc import osc_server, udp_client
 from pythonosc.dispatcher import Dispatcher
-
-from diving_station_py.protocol import (
-  DeviceInfo,
-  controller,
-  hand_bend,
-  hand_quat,
-  wrist,
-)
-from diving_station_py.protocol.connect import build_connect_message
-from diving_station_py.protocol.device_info import parse_device_info
-from diving_station_py.protocol.disconnect import build_disconnect_message
-from diving_station_py.protocol.haptic import build_haptic_message
 
 from .event import (
   AsyncEventHandler,
@@ -27,7 +16,6 @@ from .event import (
   ControllerInputReceivedEvent,
   DeviceInfoReceivedEvent,
   DisconnectEvent,
-  EventType,
   HandBendReceivedEvent,
   Handlers,
   HandQuatReceivedEvent,
@@ -35,6 +23,18 @@ from .event import (
   WristReceivedEvent,
   event_handler,
 )
+from .protocol import (
+  DeviceInfo,
+  controller,
+  hand_bend,
+  hand_quat,
+  wrist,
+)
+from .protocol.connect import build_connect_message
+from .protocol.constants import HandType
+from .protocol.device_info import parse_device_info
+from .protocol.disconnect import build_disconnect_message
+from .protocol.haptic import build_haptic_message
 
 # Suppress warnings about coroutines not being awaited
 warnings.filterwarnings("ignore", category=RuntimeWarning, message="coroutine.*was never awaited")
@@ -56,9 +56,9 @@ class DivingStationClient:
     self._server = osc_server.AsyncIOOSCUDPServer(
       ("127.0.0.1", self.receive_port),
       self._osc_dispatcher,
-      asyncio.get_event_loop(),
+      cast(asyncio.BaseEventLoop, asyncio.get_event_loop()),
     )
-    self._transport: Optional[asyncio.DatagramTransport] = None
+    self._transport: Optional[asyncio.BaseTransport] = None
     self._devices: list[DeviceInfo] = []
     self._connected = False
 
@@ -95,7 +95,7 @@ class DivingStationClient:
     logger.debug(f"Controller data: {controller_data}")
     asyncio.create_task(self.dispatch(ControllerInputReceivedEvent(controller_data)))
 
-  async def dispatch(self, event_data: EventType) -> Any:
+  async def dispatch(self, event_data: object) -> Any:
     """イベントを対応するハンドラーにディスパッチします。
 
     Args:
@@ -264,7 +264,7 @@ class DivingStationClient:
     Raises:
         RuntimeError: 接続されていない場合に発生
     """
-    if not self._connected:
+    if not self._connected or not self._transport:
       raise RuntimeError("Not connected to Diving Station")
 
     msg = build_disconnect_message(self.receive_port)
@@ -276,8 +276,8 @@ class DivingStationClient:
 
   async def send_haptic(
     self,
-    device_id: int,
-    hand_type: hand_bend.HandType,
+    device_id: str,
+    hand_type: HandType,
     frequency: float = 200,
     amplitude: float = 1.0,
     duration: float = 1.0,
@@ -285,8 +285,8 @@ class DivingStationClient:
     """デバイスの振動要求を送信します。
 
     Args:
-        device_id (int): デバイスID
-        hand_type (hand_bend.HandType): 左右の手の種類
+        device_id (str): デバイスID
+        hand_type (HandType): 左右の手の種類
         frequency (float, optional): 振動周波数(Hz). デフォルト値は200。
         amplitude (float, optional): 振動の強さ(0-1). デフォルト値は1.0。
         duration (float, optional): 振動時間(秒). デフォルト値は1.0。

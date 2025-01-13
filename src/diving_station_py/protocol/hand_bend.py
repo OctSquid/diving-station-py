@@ -1,14 +1,6 @@
 from dataclasses import dataclass
-from enum import Enum
 
-from .constants import __protocol_version__
-
-
-class HandType(Enum):
-  """手の種別"""
-
-  RIGHT = 0
-  LEFT = 1
+from .constants import HandType, __protocol_version__
 
 
 @dataclass

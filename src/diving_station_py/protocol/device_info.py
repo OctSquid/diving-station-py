@@ -1,31 +1,9 @@
 from dataclasses import dataclass
-from enum import Enum
 from logging import getLogger
 
-from .constants import __protocol_version__
+from .constants import DeviceColor, DeviceType, __protocol_version__
 
 logger = getLogger(__name__)
-
-
-class DeviceType(Enum):
-  """デバイス種別"""
-
-  CONTACT_GLOVE = 0
-  CONTACT_SHEET = 1
-  CONTACT_GLOVE2 = 2
-
-
-class DeviceColor(Enum):
-  """デバイスカラー"""
-
-  MAGENTA = 0
-  RED = 1
-  ORANGE = 2
-  YELLOW = 3
-  GREEN = 4
-  CYAN = 5
-  BLUE = 6
-  GRAY = 7
 
 
 @dataclass

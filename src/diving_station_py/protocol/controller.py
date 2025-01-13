@@ -1,16 +1,6 @@
 from dataclasses import dataclass
-from enum import Enum
 
-from .constants import __protocol_version__
-from .hand_bend import HandType
-
-
-class ButtonState(Enum):
-  """ボタンの状態"""
-
-  RELEASED = 0
-  TOUCHED = 1
-  PRESSED = 2
+from .constants import ButtonState, HandType, __protocol_version__
 
 
 @dataclass

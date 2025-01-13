@@ -1,5 +1,6 @@
 from typing import Any, Awaitable, Callable, Dict, Type, TypeVar
 
+from diving_station_py.protocol.constants import HandType
 from diving_station_py.protocol.controller import ControllerInput
 from diving_station_py.protocol.device_info import DeviceInfo
 from diving_station_py.protocol.hand_bend import HandBend
@@ -53,7 +54,7 @@ class HapticEvent:
   def __init__(
     self,
     device_id: str,
-    hand_type: int,
+    hand_type: HandType,
     frequency: float,
     amplitude: float,
     duration: float,

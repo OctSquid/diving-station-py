@@ -1,7 +1,6 @@
 from .connect import build_connect_message
-from .constants import __protocol_version__
+from .constants import ButtonState, DeviceColor, DeviceType, HandType, __protocol_version__
 from .controller import (
-  ButtonState,
   ControllerAnalog,
   ControllerButtons,
   ControllerInput,
@@ -9,9 +8,9 @@ from .controller import (
   Trackpad,
   parse_controller,
 )
-from .device_info import DeviceColor, DeviceInfo, DeviceType, parse_device_info
+from .device_info import DeviceInfo, parse_device_info
 from .disconnect import build_disconnect_message
-from .hand_bend import FingerBend, HandBend, HandType, parse_hand_bend
+from .hand_bend import FingerBend, HandBend, parse_hand_bend
 from .hand_quat import HandQuaternion, parse_hand_quat
 from .haptic import build_haptic_message
 from .wrist import Wirst, parse_wrist

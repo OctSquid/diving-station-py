@@ -1,8 +1,7 @@
 from pythonosc.osc_message import OscMessage
 from pythonosc.osc_message_builder import OscMessageBuilder
 
-from .constants import __protocol_version__
-from .hand_bend import HandType
+from .constants import HandType, __protocol_version__
 
 
 def build_haptic_message(
