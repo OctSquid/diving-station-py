@@ -54,7 +54,7 @@ class DivingStationClient:
     self._setup_osc_handlers()
     self._client = udp_client.SimpleUDPClient(ip, 25790)
     self._server = osc_server.AsyncIOOSCUDPServer(
-      ("127.0.0.1", self.receive_port),
+      ("0.0.0.0", self.receive_port),
       self._osc_dispatcher,
       cast(asyncio.BaseEventLoop, asyncio.get_event_loop()),
     )
