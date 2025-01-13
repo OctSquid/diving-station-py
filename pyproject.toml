@@ -24,6 +24,7 @@ dev-dependencies = [
     "pyright>=1.1.391",
     "pytest>=8.3.4",
     "pytest-asyncio>=0.25.2",
+    "mypy>=1.14.1",
 ]
 
 [tool.hatch.metadata]
@@ -31,3 +32,42 @@ allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/diving_station_py"]
+
+[tool.mypy]
+ignore_missing_imports = true
+strict = true
+
+[tool.ruff]
+indent-width = 2
+line-length = 140
+
+[tool.ruff.lint]
+ignore = []
+select = [
+  "F", # pyflakes
+  "E", # pycodestyle
+  "W", # pycodestyle warnings
+  "I", # isort
+  "D", # pydocstyle
+]
+
+extend-ignore = [
+  "D100", # undocumented-public-method
+  "D104", # undocumented-public-package
+  "D105", # undocumented-magic-method
+  "D107", # undocumented-public-init
+  "D205", # blank-line-after-summary
+  "D415", # ends-in-punctuation
+]
+
+[tool.ruff.lint.pydocstyle]
+# docstringはgoogle style
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+# 個別設定
+# __init__.pyは未使用インポートを許容
+"__init__.py" = ["F401"]
+
+[tool.ruff.format]
+indent-style = "space"
