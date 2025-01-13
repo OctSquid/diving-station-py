@@ -1,6 +1,6 @@
 [project]
 name = "diving-station-py"
-version = "0.1.0"
+version = "0.1.1"
 description = "A Python library for diving station"
 authors = [
     { name = "OctSquid", email = "pqvs6k96@s.okayama-u.ac.jp" }
