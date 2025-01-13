@@ -1,79 +1,89 @@
 from dataclasses import dataclass
 from enum import Enum
 
-from .hand_bend import HandType
 from .constants import __protocol_version__
+from .hand_bend import HandType
 
 
 class ButtonState(Enum):
-    """ボタンの状態"""
+  """ボタンの状態"""
 
-    RELEASED = 0
-    TOUCHED = 1
-    PRESSED = 2
+  RELEASED = 0
+  TOUCHED = 1
+  PRESSED = 2
 
 
 @dataclass
 class Joystick:
-    x: float
-    y: float
+  """ジョイスティックの入力"""
+
+  x: float
+  y: float
 
 
 @dataclass
 class Trackpad:
-    x: float
-    y: float
+  """トラックパッドの入力"""
+
+  x: float
+  y: float
 
 
 @dataclass
 class ControllerAnalog:
-    trigger: float
-    grip_value: float
-    grip_force: float
-    joystick: Joystick
-    trackpad: Trackpad
+  """コントローラのアナログ入力"""
+
+  trigger: float
+  grip_value: float
+  grip_force: float
+  joystick: Joystick
+  trackpad: Trackpad
 
 
 @dataclass
 class ControllerButtons:
-    a: ButtonState
-    b: ButtonState
-    sys: ButtonState
-    trigger: ButtonState
-    joystick: ButtonState
-    trackpad: ButtonState
+  """コントローラのボタン入力"""
+
+  a: ButtonState
+  b: ButtonState
+  sys: ButtonState
+  trigger: ButtonState
+  joystick: ButtonState
+  trackpad: ButtonState
 
 
 @dataclass
 class ControllerInput:
-    device_id: str
-    hand_type: HandType
-    buttons: ControllerButtons
-    analog: ControllerAnalog
+  """コントローラの入力"""
+
+  device_id: str
+  hand_type: HandType
+  buttons: ControllerButtons
+  analog: ControllerAnalog
 
 
 def parse_controller(args) -> ControllerInput:
-    """コントローラの入力をパースする"""
-    version = args[0]
-    if version != __protocol_version__:
-        raise ValueError(f"Unsupported protocol version: {version}")
+  """コントローラの入力をパースする"""
+  version = args[0]
+  if version != __protocol_version__:
+    raise ValueError(f"Unsupported protocol version: {version}")
 
-    return ControllerInput(
-        device_id=args[1],
-        hand_type=HandType(args[2]),
-        buttons=ControllerButtons(
-            a=ButtonState(args[3]),
-            b=ButtonState(args[4]),
-            sys=ButtonState(args[5]),
-            trigger=ButtonState(args[6]),
-            joystick=ButtonState(args[7]),
-            trackpad=ButtonState(args[8]),
-        ),
-        analog=ControllerAnalog(
-            trigger=args[9],
-            grip_value=args[10],
-            grip_force=args[11],
-            joystick=Joystick(x=args[12], y=args[13]),
-            trackpad=Trackpad(x=args[14], y=args[15]),
-        ),
-    )
+  return ControllerInput(
+    device_id=args[1],
+    hand_type=HandType(args[2]),
+    buttons=ControllerButtons(
+      a=ButtonState(args[3]),
+      b=ButtonState(args[4]),
+      sys=ButtonState(args[5]),
+      trigger=ButtonState(args[6]),
+      joystick=ButtonState(args[7]),
+      trackpad=ButtonState(args[8]),
+    ),
+    analog=ControllerAnalog(
+      trigger=args[9],
+      grip_value=args[10],
+      grip_force=args[11],
+      joystick=Joystick(x=args[12], y=args[13]),
+      trackpad=Trackpad(x=args[14], y=args[15]),
+    ),
+  )
