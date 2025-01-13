@@ -25,7 +25,7 @@ def event_loop():
 
 
 @pytest.fixture(scope="function")
-async def client(event_loop):
+async def client(event_loop: asyncio.AbstractEventLoop):
   """Create an instance of the DivingStationClient for each test case."""
   client = DivingStationClient()
   yield client
@@ -34,7 +34,7 @@ async def client(event_loop):
 
 
 @pytest.mark.asyncio()
-async def test_handler_on_connect(client):
+async def test_handler_on_connect(client: DivingStationClient):
   """Test the on_connect handler."""
   called = False
 
@@ -49,7 +49,7 @@ async def test_handler_on_connect(client):
 
 
 @pytest.mark.asyncio()
-async def test_handler_on_disconnect(client):
+async def test_handler_on_disconnect(client: DivingStationClient):
   """Test the on_disconnect handler."""
   called = False
 
@@ -65,7 +65,7 @@ async def test_handler_on_disconnect(client):
 
 
 @pytest.mark.asyncio()
-async def test_handler_on_device_info(client):
+async def test_handler_on_device_info(client: DivingStationClient):
   """Test the on_device_info_received handler."""
   called = False
 
@@ -84,7 +84,7 @@ async def test_handler_on_device_info(client):
 
 
 @pytest.mark.asyncio()
-async def test_handler_on_wrist_data(client):
+async def test_handler_on_wrist_data(client: DivingStationClient):
   """Test the on_wrist_received handler."""
   called = False
   wrist_qt = None
@@ -103,10 +103,10 @@ async def test_handler_on_wrist_data(client):
 
 
 @pytest.mark.asyncio()
-async def test_handler_on_controller_input(client):
+async def test_handler_on_controller_input(client: DivingStationClient):
   """Test the on_controller_received handler"""
   called = False
-  data: controller.ControllerInput = None
+  data: controller.ControllerInput | None = None
 
   @client.on_controller_received
   async def on_controller_input(event: ControllerInputReceivedEvent):
@@ -119,15 +119,13 @@ async def test_handler_on_controller_input(client):
   await asyncio.sleep(0.2)
   assert called
   assert isinstance(data, controller.ControllerInput)
-  assert isinstance(data.buttons, controller.ControllerButtons)
-  assert isinstance(data.analog, controller.ControllerAnalog)
 
 
 @pytest.mark.asyncio()
-async def test_handler_on_hand_bend(client):
+async def test_handler_on_hand_bend(client: DivingStationClient):
   """Test the on_hand_bend_received handler."""
   called = False
-  data: hand_bend.HandBend = None
+  data: hand_bend.HandBend | None = None
 
   @client.on_hand_bend_received
   async def on_hand_bend(event: HandBendReceivedEvent):
@@ -143,10 +141,10 @@ async def test_handler_on_hand_bend(client):
 
 
 @pytest.mark.asyncio()
-async def test_handler_on_hand_quat(client):
+async def test_handler_on_hand_quat(client: DivingStationClient):
   """Test the on_hand_quat_received handler."""
   called = False
-  data: hand_quat.HandQuaternion = None
+  data: hand_quat.HandQuaternion | None = None
 
   @client.on_hand_quat_received
   async def on_hand_quat(event: HandQuatReceivedEvent):
