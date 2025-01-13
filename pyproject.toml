@@ -24,18 +24,23 @@ dev-dependencies = [
     "pyright>=1.1.391",
     "pytest>=8.3.4",
     "pytest-asyncio>=0.25.2",
-    "mypy>=1.14.1",
 ]
+
+[tool.rye.scripts]
+typecheck="pyright src/diving_station_py"
+generate_stubs = "pyright --createstub src/diving_station_py"
 
 [tool.hatch.metadata]
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/diving_station_py"]
+include = ["typing", "**/*.pyi"]
 
-[tool.mypy]
-ignore_missing_imports = true
-strict = true
+[tool.pyright]
+typeCheckingMode = "standard"
+venvPath = "."
+venv = ".venv"
 
 [tool.ruff]
 indent-width = 2
